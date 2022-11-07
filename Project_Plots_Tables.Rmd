@@ -1,0 +1,392 @@
+---
+title: "PSTAT 220A Project - All Relevant Bar Plots and Tables"
+author: "Elijah Castro"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(knitr)
+library(ggplot2)
+library(tidyverse)
+library(kableExtra)
+
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+# set global chunk options: images will be 7x5 inches
+knitr::opts_chunk$set(fig.width=7, fig.height=5, fig.align='center')
+
+options(digits = 2)
+options(scipen = 1)
+
+## indents are for indenting r code as formatted text
+## They may need to be adjusted depending on your OS
+# if your output looks odd, increase or decrease indent
+indent1 = '    '
+indent2 = '        '
+indent3 = '            '
+```
+
+
+
+## **Table 1:** 
+
+#### **Cross-classification of infants by their survival and gestational age, and their mother’s age and smoking habits:**
+```{r, echo = F}
+tab <- data.frame(
+  C0 = c(rep("Young", 2), rep("Older",2), "Total"),
+  C1 = c("No", "Yes", "No", "Yes", ""),
+  C2 = c(50, 9, 41, 4, 104),
+  C3 = c(315, 40, 147, 11, 513),
+  C4 = c(24, 6, 14, 1, 45),
+  C5 = c(4012, 459, 1594, 124, 6189),
+  C6 = c(4401, 514, 1796, 140, 6851)
+)
+
+colnames(tab) <- c("Mother's Age", "Smoker", "Premature - Died in 1st Year",
+                   "Premature - Alive at 1st Year", 
+                   "Full Term - Died in 1st Year", 
+                   "Full Term - Alive at 1st Year", "Total")
+
+tab %>% 
+  kbl(align = "c", caption = "") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "center",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(6, border_right = "2px solid black") %>%
+  column_spec(7, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(4, extra_css = "border-bottom: solid;") %>%
+  column_spec(1:2, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+
+
+```
+
+
+### a.)
+```{r, echo = FALSE}
+
+barplot(matrix(c(0.1046,1-0.1046,0.0723,1-0.0723),2,2), beside = F, names = c("Young Smoking Mothers", "Older Smoking Mothers"),
+        main = "Proportion of Mothers (By Age) Who Smoke",
+        ylab = "Proportion", col = c(17, 7))
+
+```
+
+
+
+
+### b.)
+```{r, echo = FALSE}
+
+barplot(matrix(c(0.0979,1-0.0979,0.0892,1-0.0892),2,2), beside = F, names = c("Smoking - Premature Babies", "Non-Smoking - Premature Babies"),
+        main = "Proportion of Mothers (By Smoking Habits) With Premature Babies",
+        ylab = "Proportion", col = c(17, 4))
+
+```
+
+
+
+```{r, echo = FALSE}
+
+barplot(matrix(c(0.1049,1-0.1049,0.0842,1-0.0842),2,2), beside = F, names = c("Young - Premature Babies", "Older - Premature Babies"),
+        main = "Proportion of Mothers (By Age) With Premature Babies",
+        ylab = "Proportion", col = c(17, 11))
+
+```
+
+
+
+### c.)
+```{r, echo = FALSE}
+
+barplot(matrix(c(0.0306,1-0.0306,0.0208,1-0.0208),2,2), beside = F, names = c("Smoke - Died in 1st Year", "Non-Smoke - Died in 1st Year"),
+        main = "Proportion of Mothers Whose Babies Died in 1st Year",
+        ylab = "Proportion", col = c(17, 2))
+
+```
+
+
+
+```{r, echo = FALSE}
+
+barplot(matrix(c(0.0310,1-0.0310,0.0181,1-0.0181),2,2), beside = F, names = c("Older - Died in 1st Year", "Young - Died in 1st Year"),
+        main = "Proportion of Mothers (By Age) Whose Babies Died in 1st Year",
+        ylab = "Proportion", col = c(17, "orange"))
+
+```
+
+
+
+### d.)
+```{r, echo = F}
+tab <- data.frame(
+  C0 = c("Older", "Young", "Total"),
+  C1 = c(5, 15, 20),
+  C2 = c(135, 499, 634),
+  C3 = c(140, 514, 654)
+)
+
+colnames(tab) <- c("Age", "Died in 1st Year",
+                   "Alive at 1st Year", "Total")
+
+tab %>% 
+  kbl(align = "c", caption = "Conditional on Smoking Mothers:") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "float_left",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(3, border_right = "2px solid black") %>%
+  column_spec(4, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(2, extra_css = "border-bottom: solid;") %>%
+  column_spec(1, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+
+
+
+tab2 <- data.frame(
+  C0 = c("Older", "Young", "Total"),
+  C1 = c(55, 74, 129),
+  C2 = c(1741, 4327, 6068),
+  C3 = c(1796, 4401, 6197)
+)
+
+colnames(tab2) <- c("Age", "Died in 1st Year",
+                   "Alive at 1st Year", "Total")
+
+tab2 %>% 
+  kbl(align = "c", caption = "Conditional on Non-Smoking Mothers:") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "right",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(3, border_right = "2px solid black") %>%
+  column_spec(4, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(2, extra_css = "border-bottom: solid;") %>%
+  column_spec(1, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+
+
+
+```
+
+
+\
+
+
+```{r, echo = F}
+tab <- data.frame(
+  C0 = c("Older", "Young", "Total"),
+  C1 = c(15, 49, 64),
+  C2 = c(125, 465, 590),
+  C3 = c(140, 514, 654)
+)
+
+colnames(tab) <- c("Age", "Premature",
+                   "Full Term", "Total")
+
+tab %>% 
+  kbl(align = "c", caption = "Conditional on Smoking Mothers:") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "float_left",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(3, border_right = "2px solid black") %>%
+  column_spec(4, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(2, extra_css = "border-bottom: solid;") %>%
+  column_spec(1, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+tab2 <- data.frame(
+  C0 = c("Older", "Young", "Total"),
+  C1 = c(188, 365, 553),
+  C2 = c(1608, 4036, 5644),
+  C3 = c(1796, 4401, 6197)
+)
+
+colnames(tab2) <- c("Age", "Premature",
+                   "Full Term", "Total")
+
+tab2 %>% 
+  kbl(align = "c", caption = "Conditional on Non-Smoking Mothers:") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "right",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(3, border_right = "2px solid black") %>%
+  column_spec(4, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(2, extra_css = "border-bottom: solid;") %>%
+  column_spec(1, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+
+
+
+
+
+```
+
+
+
+### e.)
+```{r, echo = F}
+tab <- data.frame(
+  C0 = c("Older", "Young", "Total"),
+  C1 = c(4, 9, 13),
+  C2 = c(11, 40, 51),
+  C3 = c(15, 49, 64)
+)
+
+colnames(tab) <- c("Age", "Premature - Died in 1st Year",
+                   "Premature - Alive at 1st Year", "Total")
+
+tab %>% 
+  kbl(align = "c", caption = "Conditional on Smoking Mothers:") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "float_left",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(3, border_right = "2px solid black") %>%
+  column_spec(4, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(2, extra_css = "border-bottom: solid;") %>%
+  column_spec(1, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+tab2 <- data.frame(
+  C0 = c("Older", "Young", "Total"),
+  C1 = c(41, 50, 91),
+  C2 = c(147, 315, 462),
+  C3 = c(188, 365, 553)
+)
+
+colnames(tab2) <- c("Age", "Premature - Died in 1st Year",
+                   "Premature - Alive at 1st Year", "Total")
+
+tab2 %>% 
+  kbl(align = "c", caption = "Conditional on Non-Smoking Mothers:") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "right",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(3, border_right = "2px solid black") %>%
+  column_spec(4, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(2, extra_css = "border-bottom: solid;") %>%
+  column_spec(1, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+
+
+
+
+
+```
+
+
+
+
+### f.)
+```{r, echo = F}
+tab <- data.frame(
+  C0 = c("Yes", "No", "Total"),
+  C1 = c(9, 50, 59),
+  C2 = c(40, 315, 355),
+  C3 = c(49, 365, 414)
+)
+
+colnames(tab) <- c("Smoker?", "Premature - Died in 1st Year",
+                   "Premature - Alive at 1st Year", "Total")
+
+tab %>% 
+  kbl(align = "c", caption = "Conditional on Young Mothers:") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "center",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(3, border_right = "2px solid black") %>%
+  column_spec(4, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(2, extra_css = "border-bottom: solid;") %>%
+  column_spec(1, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+
+
+
+
+
+```
+
+
+```{r, echo = F}
+tab <- data.frame(
+  C0 = c("Yes", "No", "Total"),
+  C1 = c(4, 41, 45),
+  C2 = c(11, 147, 158),
+  C3 = c(15, 188, 203)
+)
+
+colnames(tab) <- c("Smoker?", "Premature - Died in 1st Year",
+                   "Premature - Alive at 1st Year", "Total")
+
+tab %>% 
+  kbl(align = "c", caption = "Conditional on Older Mothers:") %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(bootstrap_options = c("bordered"), 
+                full_width = F,
+                position = "center",
+                latex_options = "hold_position") %>%
+  column_spec(1, border_left = T) %>%
+  column_spec(3, border_right = "2px solid black") %>%
+  column_spec(4, border_right = T) %>%
+  row_spec(0, bold = T, color = "black") %>%
+  row_spec(2, extra_css = "border-bottom: solid;") %>%
+  column_spec(1, bold = T, color = "black") %>%
+  collapse_rows(columns = 1:2, valign = "middle")
+
+
+
+```
+
+
+
+
+
+
